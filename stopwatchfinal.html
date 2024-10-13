@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stopwatch</title>
+    <style>
+
+      body{
+        background-color:black;
+      }
+      h1{
+        color:rgb(230, 200, 5);
+        margin-left:55px;
+      }
+      .time{
+        padding: 100px;
+        padding-left:70px;
+       margin-right: 980px;
+       margin-left: 10px;
+        border: 7px solid rgb(4, 4, 126) ;
+      border-radius:50%;
+        color: rgb(232, 239, 11);
+        font-size: 50px;
+      }
+      .css-stop,.css-reset{
+        font-size: 15px;
+        padding: 4px 10px;
+        margin-top: 20px;
+        margin-left: 35px;
+        color:yellow;
+        background-color: rgb(4, 4, 126);
+        font-weight: bold;
+        border:none;
+        padding: 8px 20px;
+        cursor: pointer;
+        border-radius: 60%;
+      }
+      .js-stop{
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Stopwatch</h1>
+    
+    <div class="time"></div>
+    <button class="css-stop js-start">Start</button>
+    <button class="css-reset js-reset">Reset</button>
+    
+    <script>
+     let time=JSON.parse(localStorage.getItem('time')) ||{ seconds:0, minutes:0 ,hours:0};
+    //  let time={ seconds:0, minutes:0 ,hours:0};
+
+     let stopwatchTime=document.querySelector('.time');
+     stopwatchTime.innerHTML=`${time.hours}:${time.minutes}:${time.seconds}`;
+
+      let stopwatchOn=true;
+      let intervalId;
+
+      let freeze= function(){
+        if(stopwatchOn){
+          stopElement.innerHTML='Stop';
+          stopElement.classList.add('js-stop');
+          
+          intervalId=setInterval(() => {
+          
+          time.seconds++;
+          if(time.seconds===60){
+            time.seconds=0;
+            time.minutes++;
+          }
+          if(time.minutes===60){
+            time.minutes=0;
+            time.hours++;
+          }
+          if(time.hours===24){
+            time.seconds=0;
+            time.minutes=0;
+            time.hours=0;
+          }
+          
+
+          stopwatchTime.innerHTML=`${time.hours}:${time.minutes}:${time.seconds}`;
+          localStorage.setItem('time',JSON.stringify(time));
+        }, 1000);
+         
+        stopwatchOn=false;
+      }
+      else{
+       
+        clearInterval(intervalId);
+        stopElement.classList.remove('js-stop');
+        stopElement.innerHTML='Start';
+        stopwatchOn=true;
+      }
+    }
+
+      
+      let resett=()=>{
+        clearInterval(intervalId);
+        stopElement.innerHTML='Start';
+        stopwatchOn=true;
+        time.seconds=0;
+        time.minutes=0;
+        time.hours=0;
+        localStorage.removeItem('time');
+
+        stopwatchTime.innerHTML=`${time.hours}:${time.minutes}:${time.seconds}`;
+}
+
+     
+
+      let stopElement=document.querySelector('.js-start');
+      stopElement.addEventListener('click', freeze);
+
+      const resetElement=document.querySelector('.js-reset');
+      resetElement.addEventListener('click', resett);
+
+    
+
+
+
+
+      
+     
+      
+    </script>
+  </body>
+</html>
